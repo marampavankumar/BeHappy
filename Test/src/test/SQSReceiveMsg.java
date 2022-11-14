@@ -17,30 +17,30 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 
 public class SQSReceiveMsg {
-	
+
 	public static void main(String args[]) throws JMSException, InterruptedException
-	
+
 	{
-		
-		
+
+
 		AmazonSQSClientBuilder builder = AmazonSQSClientBuilder.standard()
                 .withRegion(Regions.US_EAST_1)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAX75SQNR2YFQHNYIG", "vZzh4TTPvdOFsrZhqlU1KgXGeqxVReOe1USZ8wq+")));
-		
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("", "")));
+
         SQSConnectionFactory connectionFactory = new SQSConnectionFactory(
                 new ProviderConfiguration(), builder);
 
         SQSConnection connection = connectionFactory.createConnection();
-       
+
         Session session = connection.createSession(false, SQSSession.UNORDERED_ACKNOWLEDGE);
 
         MessageConsumer consumer = session.createConsumer(session.createQueue("TestTxnDelQueue"));
         connection.start();
 
 
-		
+
         consumer.setMessageListener(new MessageListener() {
-			
+
 			@Override
 			public void onMessage(Message message) {
 				com.amazon.sqs.javamessaging.message.SQSMessage sqsMessage = (com.amazon.sqs.javamessaging.message.SQSMessage) message;
@@ -53,32 +53,32 @@ public class SQSReceiveMsg {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
-		
+
         /*AmazonSQS sqs = AmazonSQSClientBuilder.standard()
         		  .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIAX75SQNR2YFQHNYIG", "vZzh4TTPvdOFsrZhqlU1KgXGeqxVReOe1USZ8wq+")))
         		  .withRegion(Regions.US_EAST_1)
         		  .build();
-        
+
 
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest("https://sqs.us-east-1.amazonaws.com/549593312373/TestMsgDelQueue")
         		  .withWaitTimeSeconds(10)
         		  .withMaxNumberOfMessages(10);
 
-        		List<com.amazonaws.services.sqs.model.Message> sqsMessages = sqs.receiveMessage(receiveMessageRequest).getMessages();   
-        		
-        System.out.println(sqsMessages.get(0).getBody());        		
+        		List<com.amazonaws.services.sqs.model.Message> sqsMessages = sqs.receiveMessage(receiveMessageRequest).getMessages();
+
+        System.out.println(sqsMessages.get(0).getBody());
         System.out.println(sqsMessages.get(0).getReceiptHandle());*/
-        
-        
+
+
         while(true)
         {
         	Thread.sleep(1000*60);
         }
-        
-		
+
+
 	}
 
 }
