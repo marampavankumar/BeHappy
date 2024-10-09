@@ -2,12 +2,14 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 public class TestBuildOrder {
 
-  ArrayList<Node> nodes = new ArrayList<>();
+  Map<String, Node> nodes = new HashMap<>();
 
   public static void main(String[] args) {
     TestBuildOrder buildOrder = new TestBuildOrder();
@@ -76,31 +78,33 @@ public class TestBuildOrder {
 
   void buildTree(String nodeValue, List<String> parentValues)
   {
-    Node node=  new Node();
-    node.setValue(nodeValue);
-    if(nodes.contains(node))
+    Node node;
+    if(nodes.containsKey(nodeValue))
     {
-      node = nodes.get(nodes.indexOf(node));
+      node = nodes.get(nodeValue);
     }
     else {
-      nodes.add(node);
+      node=  new Node();
+      node.setValue(nodeValue);
+      nodes.put(nodeValue, node);
     }
     ArrayList<Node> parentList  = new ArrayList<>();
     if(parentValues != null && !parentValues.isEmpty())
     {
       for(String parentVal: parentValues)
       {
-        Node parentNodeNode=  new Node();
-        parentNodeNode.setValue(parentVal);
-        if(nodes.contains(parentNodeNode))
+        Node parentNode;
+        if(nodes.containsKey(parentVal))
         {
-          parentNodeNode = nodes.get(nodes.indexOf(parentNodeNode));
+          parentNode = nodes.get(parentVal);
         }
         else {
-          nodes.add(parentNodeNode);
+          parentNode = new Node();
+          parentNode.setValue(parentVal);
+          nodes.put(parentVal, parentNode);
         }
 
-        parentList.add(parentNodeNode);
+        parentList.add(parentNode);
       }
     }
     node.setParentModules(parentList);
@@ -147,7 +151,7 @@ public class TestBuildOrder {
   {
     List<Node> leafNodes = new ArrayList<>();
     ArrayList<Node> parentNodes = new ArrayList<>();
-    for(Node node: nodes)
+    for(Node node: nodes.values())
     {
       if(node.getParentModules() != null && !node.getParentModules().isEmpty())
       {
@@ -160,7 +164,7 @@ public class TestBuildOrder {
         }
       }
     }
-    for(Node node: nodes)
+    for(Node node: nodes.values())
     {
       if(!parentNodes.contains(node))
         leafNodes.add(node);
