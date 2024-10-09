@@ -7,10 +7,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LRUCache {
 
+  //HashMap as a cache store as it has O(1) for lookup.
+  //Doubly linked list to support insertion/deletion at any place.
   Map<Integer,Node> intStore;
   Node head;
   Node tail;
   int cacheSize;
+  //read/write locks for thread safety
   private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
   private final Lock readLock = lock.readLock();
   private final Lock writeLock = lock.writeLock();
@@ -41,6 +44,7 @@ public class LRUCache {
     this.cacheSize = cacheSize;
   }
 
+  //If node is present, remove it and add to head
   public int get(int key) {
     Node reqNode = null;
     readLock.lock();
@@ -63,6 +67,8 @@ public class LRUCache {
 
   }
 
+  //if node is present, update value, remove and add to head.
+  //else remove tail node if capacity is full and add new node to head and put into map
   public void put (int key, int value) {
     writeLock.lock();
     try {
